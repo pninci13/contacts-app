@@ -1,0 +1,7 @@
+<resources>
+    <string name="app_name">contacts_app</string>
+
+    <!--String relacionadas com a acitvity princiapal, como o título e descrição do botão-->
+    <string name="agenda_de_contatos">Agenda de Contatos</string>
+    <string name="adicionar_contato">Adicionar Contato</string>
+</resources>
