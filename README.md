@@ -42,6 +42,7 @@
 * Adicionar Compose, para uma UI mais "atualizada" - Escolhi usar Material pela familiariedade
 * Integrar uma API para pegar os UFs e não hard coded
 * Integração com Firebase para um autenticação de cada usuário
+* Implementação de Testes unitário e testes instrumentados.
 
 
 Fiz o projeto de acordo com meu conhecimento e tentei sempre manter boas práticas, como modularização, organização, código comentado e outros ... =)
