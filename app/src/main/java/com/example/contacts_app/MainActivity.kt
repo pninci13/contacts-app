@@ -10,6 +10,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.example.contacts_app.adapter.ContactAdapter
 import com.google.android.material.datepicker.CalendarConstraints
 import com.google.android.material.datepicker.MaterialDatePicker
 import com.google.android.material.floatingactionbutton.FloatingActionButton
@@ -17,6 +18,7 @@ import com.example.contacts_app.data.Contact
 import com.google.android.material.textfield.TextInputEditText
 import java.text.SimpleDateFormat
 import java.util.*
+
 
 class MainActivity : AppCompatActivity() {
 
@@ -71,7 +73,8 @@ class MainActivity : AppCompatActivity() {
         val spinnerState = dialogView.findViewById<Spinner>(R.id.spinnerState)
         val etPhoneNumbers = dialogView.findViewById<TextInputEditText>(R.id.etPhoneNumbers)
 
-        val states = arrayOf("SP", "MG", "RJ", "ES")
+        val states = arrayOf("AC", "AL", "AP", "AM", "BA", "CE", "DF", "ES", "GO", "MA", "MT", "MS",
+            "MG", "PA", "PB", "PR", "PE", "PI", "RJ", "RN", "RS", "RO", "RR", "SC", "SP", "SE", "TO")
         val adapter = ArrayAdapter(this, android.R.layout.simple_spinner_dropdown_item, states)
         spinnerState.adapter = adapter
 

@@ -1,4 +1,4 @@
-package com.example.contacts_app
+package com.example.contacts_app.adapter
 
 import android.view.LayoutInflater
 import android.view.View
@@ -6,6 +6,7 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
+import com.example.contacts_app.R
 import com.example.contacts_app.data.Contact
 import java.text.SimpleDateFormat
 import java.util.*
