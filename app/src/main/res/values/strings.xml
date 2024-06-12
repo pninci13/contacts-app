@@ -4,4 +4,24 @@
     <!--String relacionadas com a acitvity princiapal, como o título e descrição do botão-->
     <string name="agenda_de_contatos">Agenda de Contatos</string>
     <string name="adicionar_contato">Adicionar Contato</string>
+
+    <!--Strings usadas no dialog de contato-->
+    <string name="telefones">Telefones (Separados por vírgula)</string>
+    <string name="estado">Estado</string>
+    <string name="data_de_nascimento">Data de Nascimento</string>
+    <string name="cpf">CPF</string>
+    <string name="nome">Nome</string>
+    <string name="uf">UF</string>
+
+    <!--Formatos de inserção-->
+    <!--Nome-->
+    <string name="digite_aqui">Digite Aqui</string>
+    <!--CPF-->
+    <string name="xxx_xxx_xxx_xx">XXX.XXX.XXX-XX</string>
+    <!--Data de Nascimento-->
+    <string name="dd_mm_yyyy">DD/MM/YYYY</string>
+    <string name="_11_1111_1111">(11)1111-1111</string>
+    <string name="telefones_separados_por_virgula">Telefones (Separados por vírgula)</string>
+
+
 </resources>

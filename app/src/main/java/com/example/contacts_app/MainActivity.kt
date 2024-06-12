@@ -1,33 +1,32 @@
 package com.example.contacts_app
 
 import ContactViewModel
+import android.app.DatePickerDialog
+import android.os.Build
 import android.os.Bundle
+import android.view.Gravity
 import android.view.LayoutInflater
-import android.view.View
-import android.widget.AdapterView
-import android.widget.ArrayAdapter
-import android.widget.EditText
-import android.widget.Spinner
-import android.widget.Toast
+import android.widget.*
 import androidx.activity.viewModels
+import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.contacts_app.adapter.ContactAdapter
-import com.example.contacts_app.data.Contact
 import com.google.android.material.floatingactionbutton.FloatingActionButton
+import com.example.contacts_app.data.Contact
+import com.google.android.material.textfield.TextInputEditText
 import java.text.SimpleDateFormat
-import java.util.Calendar
-import java.util.Date
-import java.util.Locale
+import java.util.*
 
 class MainActivity : AppCompatActivity() {
 
     private val contactViewModel: ContactViewModel by viewModels()
     private lateinit var adapter: ContactAdapter
 
+    @RequiresApi(Build.VERSION_CODES.O)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
@@ -68,13 +67,14 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
+    @RequiresApi(Build.VERSION_CODES.O)
     private fun showAddEditDialog(contact: Contact? = null) {
         val dialogView = LayoutInflater.from(this).inflate(R.layout.dialog_add_edit_contact, null)
-        val etName = dialogView.findViewById<EditText>(R.id.etName)
-        val etCPF = dialogView.findViewById<EditText>(R.id.etCPF)
-        val etBirthDate = dialogView.findViewById<EditText>(R.id.etBirthDate)
+        val etName = dialogView.findViewById<TextInputEditText>(R.id.etName)
+        val etCPF = dialogView.findViewById<TextInputEditText>(R.id.etCPF)
+        val etBirthDate = dialogView.findViewById<TextInputEditText>(R.id.etBirthDate)
         val spinnerState = dialogView.findViewById<Spinner>(R.id.spinnerState)
-        val etPhoneNumbers = dialogView.findViewById<EditText>(R.id.etPhoneNumbers)
+        val etPhoneNumbers = dialogView.findViewById<TextInputEditText>(R.id.etPhoneNumbers)
 
         val states = arrayOf("SP", "MG", "RJ", "ES")
         val adapter = ArrayAdapter(this, android.R.layout.simple_spinner_dropdown_item, states)
@@ -86,22 +86,35 @@ class MainActivity : AppCompatActivity() {
             etBirthDate.setText(SimpleDateFormat("dd/MM/yyyy", Locale.US).format(contact.birthDate))
             spinnerState.setSelection(states.indexOf(contact.state))
             etPhoneNumbers.setText(contact.phoneNumbers.joinToString(","))
-            if (contact.state == "SP") {
-                etCPF.visibility = View.VISIBLE
-            }
         }
 
-        spinnerState.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
-            override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
-                val state = states[position]
-                etCPF.visibility = if (state == "SP") View.VISIBLE else View.GONE
-            }
+        // Configurar DatePickerDialog
+        etBirthDate.setOnClickListener {
+            val calendar = Calendar.getInstance()
+            val datePickerDialog = DatePickerDialog(
+                this,
+                { _, year, month, dayOfMonth ->
+                    val selectedDate = Calendar.getInstance()
+                    selectedDate.set(year, month, dayOfMonth)
+                    etBirthDate.setText(SimpleDateFormat("dd/MM/yyyy", Locale.US).format(selectedDate.time))
+                },
+                calendar.get(Calendar.YEAR),
+                calendar.get(Calendar.MONTH),
+                calendar.get(Calendar.DAY_OF_MONTH)
+            )
+            datePickerDialog.show()
+        }
 
-            override fun onNothingSelected(parent: AdapterView<*>?) {}
+        val customTitle = TextView(this).apply {
+            text = if (contact == null) "Adicionar Contato" else "Editar Contato"
+            setPadding(16, 16, 16, 16)
+            gravity = Gravity.CENTER
+            textSize = 20f
+            setTypeface(resources.getFont(R.font.montserrat_bold))
         }
 
         AlertDialog.Builder(this)
-            .setTitle(if (contact == null) "Adicionar Contato" else "Editar Contato")
+            .setCustomTitle(customTitle)
             .setView(dialogView)
             .setPositiveButton("Salvar") { _, _ ->
                 val name = etName.text.toString().trim()

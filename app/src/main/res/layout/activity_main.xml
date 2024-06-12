@@ -27,7 +27,7 @@
         android:layout_marginTop="16dp"
         android:padding="16dp" />
 
-    <!-- Botão flutuante para adicionar contatos -->
+    <!-- Botão para adicionar contatos -->
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/fab"
         android:layout_width="wrap_content"
