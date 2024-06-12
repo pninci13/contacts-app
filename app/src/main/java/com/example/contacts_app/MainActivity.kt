@@ -1,20 +1,17 @@
 package com.example.contacts_app
 
 import ContactViewModel
-import android.app.DatePickerDialog
-import android.os.Build
 import android.os.Bundle
-import android.view.Gravity
 import android.view.LayoutInflater
 import android.widget.*
 import androidx.activity.viewModels
-import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.example.contacts_app.adapter.ContactAdapter
+import com.google.android.material.datepicker.CalendarConstraints
+import com.google.android.material.datepicker.MaterialDatePicker
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.example.contacts_app.data.Contact
 import com.google.android.material.textfield.TextInputEditText
@@ -26,7 +23,6 @@ class MainActivity : AppCompatActivity() {
     private val contactViewModel: ContactViewModel by viewModels()
     private lateinit var adapter: ContactAdapter
 
-    @RequiresApi(Build.VERSION_CODES.O)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
@@ -67,7 +63,6 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    @RequiresApi(Build.VERSION_CODES.O)
     private fun showAddEditDialog(contact: Contact? = null) {
         val dialogView = LayoutInflater.from(this).inflate(R.layout.dialog_add_edit_contact, null)
         val etName = dialogView.findViewById<TextInputEditText>(R.id.etName)
@@ -88,33 +83,52 @@ class MainActivity : AppCompatActivity() {
             etPhoneNumbers.setText(contact.phoneNumbers.joinToString(","))
         }
 
-        // Configurar DatePickerDialog
+        // Configurar MaterialDatePicker com um intervalo adequado
         etBirthDate.setOnClickListener {
-            val calendar = Calendar.getInstance()
-            val datePickerDialog = DatePickerDialog(
-                this,
-                { _, year, month, dayOfMonth ->
-                    val selectedDate = Calendar.getInstance()
-                    selectedDate.set(year, month, dayOfMonth)
-                    etBirthDate.setText(SimpleDateFormat("dd/MM/yyyy", Locale.US).format(selectedDate.time))
-                },
-                calendar.get(Calendar.YEAR),
-                calendar.get(Calendar.MONTH),
-                calendar.get(Calendar.DAY_OF_MONTH)
-            )
-            datePickerDialog.show()
+            val calendarStart = Calendar.getInstance()
+            calendarStart.add(Calendar.YEAR, -100) // Start 100 years ago
+
+            val calendarEnd = Calendar.getInstance() // End at the current date
+
+            val constraintsBuilder = CalendarConstraints.Builder()
+                .setStart(calendarStart.timeInMillis)
+                .setEnd(calendarEnd.timeInMillis)
+                .setOpenAt(calendarEnd.timeInMillis)
+                .setValidator(object : CalendarConstraints.DateValidator {
+                    override fun isValid(date: Long): Boolean {
+                        return date <= calendarEnd.timeInMillis
+                    }
+
+                    override fun writeToParcel(dest: android.os.Parcel, flags: Int) {
+                        // Not implemented
+                    }
+
+                    override fun describeContents(): Int {
+                        return 0
+                    }
+                })
+
+            val builder = MaterialDatePicker.Builder.datePicker()
+                .setTitleText("Select Birth Date")
+                .setCalendarConstraints(constraintsBuilder.build())
+
+            val picker = builder.build()
+
+            picker.addOnPositiveButtonClickListener {
+                val selectedDate = Date(it)
+                etBirthDate.setText(SimpleDateFormat("dd/MM/yyyy", Locale.US).format(selectedDate))
+            }
+
+            picker.show(supportFragmentManager, picker.toString())
         }
 
-        val customTitle = TextView(this).apply {
-            text = if (contact == null) "Adicionar Contato" else "Editar Contato"
-            setPadding(16, 16, 16, 16)
-            gravity = Gravity.CENTER
-            textSize = 20f
-            setTypeface(resources.getFont(R.font.montserrat_bold))
-        }
+        // Configurar o título personalizado no XML
+        val customTitleView = LayoutInflater.from(this).inflate(R.layout.dialog_title, null)
+        val dialogTitle = customTitleView.findViewById<TextView>(R.id.dialogTitle)
+        dialogTitle.text = if (contact == null) "Adicionar Contato" else "Editar Contato"
 
         AlertDialog.Builder(this)
-            .setCustomTitle(customTitle)
+            .setCustomTitle(customTitleView)
             .setView(dialogView)
             .setPositiveButton("Salvar") { _, _ ->
                 val name = etName.text.toString().trim()
