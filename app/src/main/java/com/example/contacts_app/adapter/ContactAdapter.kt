@@ -16,8 +16,10 @@ class ContactAdapter(
     private val onDeleteClick: (Contact) -> Unit
 ) : RecyclerView.Adapter<ContactAdapter.ContactViewHolder>() {
 
+    // Lista de contatos que será exibida pelo adapter
     private var contacts = emptyList<Contact>()
 
+    // Referência das views de cada item
     inner class ContactViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         val contactName: TextView = itemView.findViewById(R.id.contactName)
         val editContact: ImageView = itemView.findViewById(R.id.editContact)
@@ -30,6 +32,7 @@ class ContactAdapter(
         return ContactViewHolder(itemView)
     }
 
+    // Faz o bind dos dados as views
     override fun onBindViewHolder(holder: ContactViewHolder, position: Int) {
         val currentContact = contacts[position]
         holder.contactName.text = currentContact.name
@@ -38,6 +41,7 @@ class ContactAdapter(
         holder.contactDate.text = SimpleDateFormat("dd/MM/yyyy HH:mm", Locale.US).format(currentContact.registrationDate)
     }
 
+    // Atualiza lista contatos e notifica UI
     internal fun setContacts(contacts: List<Contact>) {
         this.contacts = contacts
         notifyDataSetChanged()

@@ -8,6 +8,7 @@ import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import androidx.room.Update
 
+//DAO de contato com as operações CRUD
 @Dao
 interface ContactDAO {
     @Insert(onConflict = OnConflictStrategy.REPLACE)

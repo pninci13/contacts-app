@@ -9,15 +9,18 @@ import kotlinx.coroutines.launch
 
 class ContactViewModel(application: Application) : AndroidViewModel(application) {
 
+    // Instância para acesso ao DB
     private val repository: ContactRepository
     val allContacts: LiveData<List<Contact>>
 
+    // Executa quando a view model é criada, pegando os dados do banco
     init {
         val contactDao = ContactDatabase.getDatabase(application).contactDao()
         repository = ContactRepository(contactDao)
         allContacts = repository.allContacts
     }
 
+    // Usando coroutine para fazer em yma thread separada
     fun insert(contact: Contact) {
         viewModelScope.launch {
             repository.insert(contact)

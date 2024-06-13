@@ -4,7 +4,10 @@ import androidx.lifecycle.LiveData
 import com.example.contacts_app.data.Contact
 import com.example.contacts_app.data.ContactDAO
 
+
+// Cria as operações de CRUD que são realizadas no Banco
 class ContactRepository(private val contactDao: ContactDAO) {
+    // Detectar mudança de dados
     val allContacts: LiveData<List<Contact>> = contactDao.getAllContacts()
 
     suspend fun insert(contact: Contact) {

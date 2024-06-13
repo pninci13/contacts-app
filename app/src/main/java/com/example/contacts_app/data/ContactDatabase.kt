@@ -6,6 +6,7 @@ import androidx.room.RoomDatabase
 import androidx.room.TypeConverters
 import android.content.Context
 
+//Criação do banco de dados, passando as entities, DAO,
 @Database(entities = [Contact::class], version = 1, exportSchema = false)
 @TypeConverters(Converters::class)
 abstract class ContactDatabase : RoomDatabase() {
